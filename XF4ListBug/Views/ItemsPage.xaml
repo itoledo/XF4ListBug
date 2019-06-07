@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:converters="clr-namespace:TSM4K.Converters;assembly=XF4ListBug"
+            xmlns:templateSelectors="clr-namespace:TSM4K.TemplateSelectors;assembly=XF4ListBug"
+            xmlns:models="clr-namespace:TSM4K.Models"
+             mc:Ignorable="d"
+             x:Class="XF4ListBug.Views.ItemsPage"
+             Title="{Binding Title}"
+             x:Name="BrowseItemsPage">
+
+    <ContentPage.Resources>
+
+        <Color x:Key="Primary">#03d188</Color>
+        <Color x:Key="PrimaryLight">#56DDAD</Color>
+        <Color x:Key="PrimaryDark">#008e76</Color>
+        <Color x:Key="Accent">#FF5504</Color>
+        <Color x:Key="LightBackgroundColor">#EEEEEF</Color>
+        <Color x:Key="DarkBackgroundColor">#eeeeef</Color>
+        <Color x:Key="MediumGrayTextColor">#4d4d4d</Color>
+        <Color x:Key="LightTextColor">#999999</Color>
+        <Color x:Key="BackgroundIntro">#00c853</Color>
+        <Color x:Key="BipBlue">#0071CE</Color>
+        <Color x:Key="BipYel">#FAAF40</Color>
+        <!--  Layouts  -->
+        <Style x:Key="numberFrame" TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="Aquamarine" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="HeightRequest" Value="45" />
+            <Setter Property="Padding" Value="0,0,0,0" />
+            <Setter Property="HasShadow" Value="False" />
+        </Style>
+        
+        <ResourceDictionary>
+            <converters:SeleccionableImagenConverter x:Key="SeleccionableImagenConverter" />
+            <converters:ReverseBooleanConverter x:Key="ReverseBooleanConverter" />
+            <DataTemplate x:Key="ParaderoCercanoNoCodeDataTemplate" x:DataType="models:Paradero">
+                <ViewCell>
+                    <StackLayout Orientation="Horizontal">
+                        <!--Replace rectangle with image-->
+                        <Grid HeightRequest="50" WidthRequest="50">
+                            <Label VerticalOptions="Center" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="{Binding stop_code}" />
+                            <Image
+                                HeightRequest="40"
+                                HorizontalOptions="Center"
+                                Source="{Binding Converter={StaticResource SeleccionableImagenConverter}, ConverterParameter=true}"
+                                VerticalOptions="Center"
+                                WidthRequest="40" />
+                        </Grid>
+
+
+                        <Label Text="{Binding TextoSinCodigo}" />
+
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+            <DataTemplate x:Key="ParaderoCercanoDataTemplate" x:DataType="models:Paradero">
+                <ViewCell>
+                    <Frame
+                        Margin="3,3,3,3"
+                        Padding="5,5,5,5"
+                        BackgroundColor="White"
+                        BorderColor="#fafafa"
+                        HasShadow="False"
+                        MinimumHeightRequest="200"
+                        VerticalOptions="Fill">
+                        <Grid
+                            Padding="5"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="FillAndExpand">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <!--Replace rectangle with image-->
+                            <Frame
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Padding="0,0,0,0"
+                                BackgroundColor="Black"
+                                HasShadow="False"
+                                HeightRequest="90"
+                                OutlineColor="Black">
+                                <StackLayout
+                                    Orientation="Vertical"
+                                    Spacing="0"
+                                    VerticalOptions="Center">
+
+                                    <Image Source="stop.png" WidthRequest="30" />
+
+                                    <Label
+                                        FontSize="Micro"
+                                        HorizontalOptions="Center"
+                                        HorizontalTextAlignment="Center"
+                                        Text="{Binding stop_code}"
+                                        TextColor="White"
+                                        VerticalOptions="EndAndExpand"
+                                        VerticalTextAlignment="End"
+                                        WidthRequest="50" />
+                                </StackLayout>
+                            </Frame>
+
+                            <StackLayout
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Orientation="Vertical"
+                                VerticalOptions="FillAndExpand">
+                                <Label
+                                    FontSize="Medium"
+                                    LineBreakMode="WordWrap"
+                                    Text="{Binding TextoSinCodigo}"
+                                    VerticalOptions="FillAndExpand"
+                                    VerticalTextAlignment="Center" />
+
+
+                            </StackLayout>
+
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                FontSize="Small"
+                                LineBreakMode="WordWrap"
+                                Text="{Binding DestinosServicios}"
+                                VerticalOptions="FillAndExpand" />
+
+                        </Grid>
+                    </Frame>
+                </ViewCell>
+            </DataTemplate>
+            <templateSelectors:ParaderoDataTemplateSelector
+                x:Key="ParaderoDataTemplateSelector"
+                ParaderoCercanoDataTemplate="{StaticResource ParaderoCercanoDataTemplate}"
+                ParaderoCercanoNoCodeDataTemplate="{StaticResource ParaderoCercanoNoCodeDataTemplate}" />
+        </ResourceDictionary>
+
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <!--esta imagen es para casos fuera de RM-->
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ListView
+                Grid.Row="0"
+                VerticalOptions="FillAndExpand"
+                BackgroundColor="{StaticResource DarkBackgroundColor}"
+                HasUnevenRows="True"
+                IsPullToRefreshEnabled="True"
+                IsRefreshing="{Binding Refrescando}"
+                ItemTemplate="{StaticResource ParaderoDataTemplateSelector}"
+                ItemsSource="{Binding ParaderosCercanos}"
+                RefreshCommand="{Binding RefrescarCommand}"
+                CachingStrategy="RetainElement"
+                SeparatorVisibility="None">
+
+                <!--<ListView.Behaviors>
+                    <behaviors:EventToCommandBehavior
+                        Command="{Binding SeleccionarParaderoCommand}"
+                        EventArgsParameterPath="Item"
+                        EventName="ItemTapped" />
+                </ListView.Behaviors>-->
+
+            </ListView>
+
+            <StackLayout
+                BackgroundColor="White"
+                IsVisible="{Binding ParaderosCercanos.Count, Converter={StaticResource ReverseBooleanConverter}}"
+                Orientation="Vertical"
+                Spacing="0"
+                VerticalOptions="FillAndExpand">
+
+                <StackLayout
+                    BackgroundColor="White"
+                    Orientation="Vertical"
+                    VerticalOptions="CenterAndExpand">
+                    <Label
+                    Margin="0,0,0,10"
+                    FontAttributes="Bold"
+                    FontSize="Large"
+                    HorizontalOptions="CenterAndExpand"
+                    Text="Lo sentimos"
+                    VerticalOptions="StartAndExpand" />
+
+                    <Label
+                        HorizontalOptions="CenterAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Text="No encontramos paraderos cercanos a tu ubicación." />
+                    <Image
+                        HeightRequest="150"
+                        HorizontalOptions="Center"
+                        Source="sorry.png"
+                        VerticalOptions="Center"
+                        WidthRequest="150" />
+                    <!--<Label HorizontalOptions="CenterAndExpand" Text="Por ahora... " />-->
+
+                </StackLayout>
+            </StackLayout>
+
+            <Grid
+                BackgroundColor="White"
+                IsVisible="{Binding SinPermisoUbicacion}"
+                VerticalOptions="FillAndExpand">
+
+                <StackLayout
+                    BackgroundColor="White"
+                    Orientation="Vertical"
+                    VerticalOptions="CenterAndExpand">
+
+                    <Label
+                        Margin="0,0,0,10"
+                        FontAttributes="Bold"
+                        FontSize="Large"
+                        HorizontalOptions="CenterAndExpand"
+                        Text="Lo sentimos"
+                        VerticalOptions="StartAndExpand" />
+
+                    <Label
+                        HorizontalOptions="CenterAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Margin="5"
+                        Text="TransantiagoMaster requiere permisos de ubicación. Toca la imagen de abajo para ir a la configuración, donde podrás activar los permisos." />
+
+                    <Image
+                        HeightRequest="150"
+                        HorizontalOptions="Center"
+                        Source="sorry.png"
+                        VerticalOptions="Center"
+                        WidthRequest="150">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ConfiguracionCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                </StackLayout>
+            </Grid>
+
+            <!--<controls:AdControlView Grid.Row="1" VerticalOptions="EndAndExpand" HorizontalOptions="FillAndExpand" IsVisible="{Binding Sesion.AdsVisible}" />-->
+        </Grid>
+
+    </ContentPage.Content>
+
+</ContentPage>
